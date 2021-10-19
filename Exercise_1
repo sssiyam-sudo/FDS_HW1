@@ -1,0 +1,119 @@
+####################################-----EXERCISE 1.a ----##########################################
+
+def gauss(sigma):
+    
+    b=math.floor(sigma*3)
+    a=-b
+    
+    x=[num for num in range (a,b+1)]
+    coefficient=1/(((math.pi*2)**0.5)*sigma)
+    Gx=[np.exp(-element*2 / (2 * sigma*2))*coefficient for element in x]
+    
+    x=np.array(x)
+    Gx=np.array(Gx)
+    
+    return Gx, x
+ 
+#--------------------------------------------------------
+def box(filter_size = 3,show_verbose=False):
+    Bx = []
+    x = []
+    
+    sigma = 1/filter_size
+    x_aux = [i for i in range(int(-3*sigma), int(3*sigma)+1)]
+    x = []
+    if len(x_aux) != filter_size:
+        for i in range(filter_size):
+            x.append(x_aux[0])
+    else:
+        x = x_aux
+    Bx = [sigma for g in range(filter_size)]
+    
+    return Bx,x
+    
+#-------------------------------------------------------
+def custom():
+    Gx = np.array([[-0.015, -0.035, -0.015],
+                   [-0.035, 0.8, -0.035],
+                   [-0.015, -0.035, -0.015]])
+    return Gx
+#-------------------------------------------------------
+def gaussdx(sigma):
+    b=math.floor(sigma*3)
+    a=-b
+    
+    x=[num for num in range (a,b+1)]
+    coefficient=-1/(((math.pi*2)*0.5)*sigma*3)
+    Gx=[np.exp(-element*2 / (2 * sigma*2))*coefficient*element for element in x]
+    
+    x=np.array(x)
+    Gx=np.array(Gx)
+    return Gx, x
+
+#+++++++++++++++++++++++++++++++++++
+#-------------------------------------------------------
+
+
+
+
+##############################--------- EXERCISE 1.b --------###################################
+def gaussfiltering(img, sigma):
+
+    [Gx,x]=gauss(sigma)
+    Gx = Gx.reshape(1, Gx.size)
+    smooth_img=conv2(conv2(img, Gx, 'same'), Gx.T, 'same')
+    
+    return smooth_img
+ 
+#-----------------------------------------------------
+ def boxfiltering(img, filter_size):
+    [Bx, x] = box(filter_size)
+    Bx = np.array(Bx)
+    Bx = Bx.reshape(1, Bx.size)
+    smooth_img = conv2(conv2(img, Bx, 'same'), Bx.T, 'same')
+    return np.array(smooth_img)
+    
+#-------------------------------------------------------
+def customfiltering(img):
+    Gx = custom()
+    Gx = Gx.reshape(1, Gx.size)
+    smooth_img = conv2(img, Gx, 'same')
+    return np.array(smooth_img)
+    
+#--------------------------------------------------------
+#+++++++++++++++
+
+
+
+
+#################################--------- EXERCISE 1.c -------------#########################################
+
+def downscale(img, factor):
+    scale_percent = factor 
+    width = int(img.shape[1] * scale_percent)
+    height = int(img.shape[0] * scale_percent)
+    dim = (width, height)
+    resized_img = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+
+    return resized_img
+
+#-------------------------------------------------------
+def GaussianPyramid(img, steps=3, factor=0.5, sigma=4):
+    imgplot = plt.imshow(img)
+    plt.show()
+    img = gaussfiltering(img, sigma)
+    imgplot = plt.imshow(img)
+    plt.show()
+    for i in range(steps):
+        img = downscale(img, factor)
+        img = gaussfiltering(img, sigma)
+        imgplot = plt.imshow(img)
+        plt.show()
+    return
+#-----------------------------------------------------------
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+    
